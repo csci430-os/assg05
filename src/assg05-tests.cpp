@@ -23,24 +23,28 @@ using namespace std;
 /**
  * @brief Initial tests of SchedulingSystem process table loading and creation
  */
-TEST_CASE("Setup 1: Initial tests of loading and constructing process table", "[setup1]")
-{
+TEST_CASE("Setup 1: Initial tests of loading and constructing process table",
+          "[setup1]") {
   // a basic scheduling system simulator that defaults to FCFS scheduling policy
   SchedulingSystem sim;
 
   // test bad file name exceptions
-  CHECK_THROWS_AS(sim.loadProcessTable("simfiles/bogus.sim"), SimulatorException);
+  CHECK_THROWS_AS(sim.loadProcessTable("simfiles/bogus.sim"),
+                  SimulatorException);
 
   // test loading simulated page reference streams from file
   sim.loadProcessTable("simfiles/process-table-01.sim");
-  CHECK(sim.processTableToString() == "[ (A 0 3) (B 2 6) (C 4 4) (D 6 5) (E 8 2) ]");
+  CHECK(sim.processTableToString() ==
+        "[ (A 0 3) (B 2 6) (C 4 4) (D 6 5) (E 8 2) ]");
 
   sim.loadProcessTable("simfiles/process-table-02.sim");
-  CHECK(sim.processTableToString() == "[ (A 0 3) (B 1 5) (C 3 2) (D 9 5) (E 12 5) ]");
+  CHECK(sim.processTableToString() ==
+        "[ (A 0 3) (B 1 5) (C 3 2) (D 9 5) (E 12 5) ]");
 
   sim.generateRandomProcessTable(10, 0.33, 10, 42);
-  CHECK(
-    sim.processTableToString() == "[ (P0 0 1) (P1 3 9) (P2 6 4) (P3 9 5) (P4 10 3) (P5 11 9) (P6 15 10) (P7 23 8) (P8 26 1) (P9 27 2) ]");
+  CHECK(sim.processTableToString() ==
+        "[ (P0 0 1) (P1 3 9) (P2 6 4) (P3 9 5) (P4 10 3) (P5 11 9) (P6 15 10) "
+        "(P7 23 8) (P8 26 1) (P9 27 2) ]");
 }
 
 /**
@@ -48,11 +52,9 @@ TEST_CASE("Setup 1: Initial tests of loading and constructing process table", "[
  */
 #undef task1_1
 #ifdef task1_1
-TEST_CASE("Task 1: implement getSystemTime() accessor method", "[task1]")
-{
-  SECTION("Task 1: system time is initialized to 0", "[task1]")
-  {
-    SchedulingSystem  sim;
+TEST_CASE("Task 1: implement getSystemTime() accessor method", "[task1]") {
+  SECTION("Task 1: system time is initialized to 0", "[task1]") {
+    SchedulingSystem sim;
 
     CHECK(sim.getSystemTime() == 0);
   }
@@ -61,31 +63,26 @@ TEST_CASE("Task 1: implement getSystemTime() accessor method", "[task1]")
 
 #undef task1_2
 #ifdef task1_2
-TEST_CASE("Task 1: implement getNumProcesses() accessor method", "[task1]")
-{
-  SECTION("Task 1: number of processes is initialized to 0", "[task1]")
-  {
-    SchedulingSystem  sim;
+TEST_CASE("Task 1: implement getNumProcesses() accessor method", "[task1]") {
+  SECTION("Task 1: number of processes is initialized to 0", "[task1]") {
+    SchedulingSystem sim;
     CHECK(sim.getNumProcesses() == 0);
   }
-  
-  SECTION("Task 1: number of processes in table 01 is 5", "[task1]")
-  {
-    SchedulingSystem  sim;
+
+  SECTION("Task 1: number of processes in table 01 is 5", "[task1]") {
+    SchedulingSystem sim;
     sim.loadProcessTable("simfiles/process-table-01.sim");
     CHECK(sim.getNumProcesses() == 5);
   }
 
-  SECTION("Task 1: number of processes in table 02 is 5", "[task1]")
-  {
-    SchedulingSystem  sim;
+  SECTION("Task 1: number of processes in table 02 is 5", "[task1]") {
+    SchedulingSystem sim;
     sim.loadProcessTable("simfiles/process-table-02.sim");
     CHECK(sim.getNumProcesses() == 5);
   }
 
-  SECTION("Task 1: randomly generate 10 processes", "[task1]")
-  {
-    SchedulingSystem  sim;
+  SECTION("Task 1: randomly generate 10 processes", "[task1]") {
+    SchedulingSystem sim;
     sim.generateRandomProcessTable(10, 0.33, 10, 42);
     CHECK(sim.getNumProcesses() == 10);
   }
@@ -94,11 +91,9 @@ TEST_CASE("Task 1: implement getNumProcesses() accessor method", "[task1]")
 
 #undef task1_3
 #ifdef task1_3
-TEST_CASE("Task 1: implement isCpuIdle() accessor method", "[task1]")
-{
-  SECTION("Task 1: cpu is initially IDLE in simulations ", "[task1]")
-  {
-    SchedulingSystem  sim;
+TEST_CASE("Task 1: implement isCpuIdle() accessor method", "[task1]") {
+  SECTION("Task 1: cpu is initially IDLE in simulations ", "[task1]") {
+    SchedulingSystem sim;
 
     CHECK(sim.isCpuIdle());
   }
@@ -107,34 +102,30 @@ TEST_CASE("Task 1: implement isCpuIdle() accessor method", "[task1]")
 
 #undef task1_4
 #ifdef task1_4
-TEST_CASE("Task 1: implement getRunningProcessName() accessor method", "[task1]")
-{
-  SECTION("Task 1: cpu is initially IDLE", "[task1]")
-  {
-    SchedulingSystem  sim;
+TEST_CASE("Task 1: implement getRunningProcessName() accessor method",
+          "[task1]") {
+  SECTION("Task 1: cpu is initially IDLE", "[task1]") {
+    SchedulingSystem sim;
 
     CHECK(sim.getRunningProcessName() == "IDLE");
   }
 }
 #endif
 
-
 /**
  * @brief Task 2: Implement allProcessesDone() member method
  */
 #undef task2
 #ifdef task2
-TEST_CASE("Task 2: Implement allProcessesDone() member method", "[task2]")
-{
-  SECTION("Task 2: initially all processes are not yet done", "[task2]")
-  {
+TEST_CASE("Task 2: Implement allProcessesDone() member method", "[task2]") {
+  SECTION("Task 2: initially all processes are not yet done", "[task2]") {
     SchedulingSystem sim;
     sim.loadProcessTable("simfiles/process-table-01.sim");
     CHECK_FALSE(sim.allProcessesDone());
   }
 
-  SECTION("Task 2: even if some processes are finished, still not all done", "[task2]")
-  {
+  SECTION("Task 2: even if some processes are finished, still not all done",
+          "[task2]") {
     SchedulingSystem sim;
     sim.loadProcessTable("simfiles/process-table-01.sim");
     sim.process[0].done = true;
@@ -143,8 +134,7 @@ TEST_CASE("Task 2: Implement allProcessesDone() member method", "[task2]")
     CHECK_FALSE(sim.allProcessesDone());
   }
 
-  SECTION("Task 2: but when all processes are done, should detect", "[task2]")
-  {
+  SECTION("Task 2: but when all processes are done, should detect", "[task2]") {
     SchedulingSystem sim;
     sim.loadProcessTable("simfiles/process-table-01.sim");
     sim.process[0].done = true;
@@ -162,10 +152,8 @@ TEST_CASE("Task 2: Implement allProcessesDone() member method", "[task2]")
  */
 #undef task3
 #ifdef task3
-TEST_CASE("Task 3: Implement dispatchCpuIfIdle() member method", "[task3]")
-{
-  SECTION("Task 3: test dispatch with FCFS default policy", "[task3]")
-  {
+TEST_CASE("Task 3: Implement dispatchCpuIfIdle() member method", "[task3]") {
+  SECTION("Task 3: test dispatch with FCFS default policy", "[task3]") {
     // a basic scheduling system simulator that defaults to using FCFS
     // scheduling policy
     SchedulingSystem sim;
@@ -177,8 +165,9 @@ TEST_CASE("Task 3: Implement dispatchCpuIfIdle() member method", "[task3]")
     CHECK(sim.getRunningProcessName() == "IDLE");
     CHECK(sim.getNumProcesses() == 5);
     CHECK_FALSE(sim.allProcessesDone());
-    CHECK(sim.processTableToString() == "[ (A 0 3) (B 2 6) (C 4 4) (D 6 5) (E 8 2) ]");
-    
+    CHECK(sim.processTableToString() ==
+          "[ (A 0 3) (B 2 6) (C 4 4) (D 6 5) (E 8 2) ]");
+
     // dispatch the first process, incidentally we can now check isCpuIdle and
     // getRunningProcessName more thoroughly
     sim.checkProcessArrivals();
@@ -189,15 +178,15 @@ TEST_CASE("Task 3: Implement dispatchCpuIfIdle() member method", "[task3]")
     CHECK(sim.process[0].startTime == 0);
   }
 
-  SECTION("Task 3: dispatch called when cpu is not idle should do nothing", "[task3]")
-  {
+  SECTION("Task 3: dispatch called when cpu is not idle should do nothing",
+          "[task3]") {
     // a basic scheduling system simulator that defaults to using FCFS
     // scheduling policy
     SchedulingSystem sim;
 
     // load a simulation process table from file
     sim.loadProcessTable("simfiles/process-table-01.sim");
-    
+
     sim.checkProcessArrivals();
     CHECK(sim.process[0].startTime == NOT_STARTED);
     sim.dispatchCpuIfIdle();
@@ -211,15 +200,16 @@ TEST_CASE("Task 3: Implement dispatchCpuIfIdle() member method", "[task3]")
     CHECK(sim.process[0].startTime == 0);
   }
 
-  SECTION("Task 3: make cpu idle and dispatch another process to test dispatching", "[task3]")
-  {
+  SECTION(
+      "Task 3: make cpu idle and dispatch another process to test dispatching",
+      "[task3]") {
     // a basic scheduling system simulator that defaults to using FCFS
     // scheduling policy
     SchedulingSystem sim;
 
     // load a simulation process table from file
     sim.loadProcessTable("simfiles/process-table-01.sim");
-    
+
     sim.checkProcessArrivals();
     CHECK(sim.process[0].startTime == NOT_STARTED);
     sim.dispatchCpuIfIdle();
@@ -243,8 +233,9 @@ TEST_CASE("Task 3: Implement dispatchCpuIfIdle() member method", "[task3]")
     CHECK(sim.process[1].startTime == 2);
   }
 
-  SECTION("Task 3: check start time recorded correctly if process dispatched multiple times", "[task3]")
-  {
+  SECTION("Task 3: check start time recorded correctly if process dispatched "
+          "multiple times",
+          "[task3]") {
     // a basic scheduling system simulator that defaults to using FCFS
     // scheduling policy
     SchedulingSystem sim;
@@ -261,7 +252,8 @@ TEST_CASE("Task 3: Implement dispatchCpuIfIdle() member method", "[task3]")
     CHECK(sim.getRunningProcessName() == "A");
     CHECK(sim.process[0].startTime == 2);
 
-    // artifically make cpu idle, and have process A arrive again, but set system time to 4
+    // artifically make cpu idle, and have process A arrive again, but set
+    // system time to 4
     sim.cpu = IDLE;
     sim.systemTime = 0;
     sim.checkProcessArrivals();
@@ -287,33 +279,32 @@ TEST_CASE("Task 3: Implement dispatchCpuIfIdle() member method", "[task3]")
  *   of new arrivals, dispatching, simulating cpu and finishing
  *   processes done.
  */
-TEST_CASE("Task 4: Implement checkProcessFinished() member method, final test", "[task4]")
-{
-  SECTION("Task 4: test that process A is finished correctly for table 01 FCFS", "[task4]")
-  {
+TEST_CASE("Task 4: Implement checkProcessFinished() member method, final test",
+          "[task4]") {
+  SECTION("Task 4: test that process A is finished correctly for table 01 FCFS",
+          "[task4]") {
     // a basic scheduling system simulator that defaults to using FCFS
     // scheduling policy
     SchedulingSystem sim;
-    
+
     // load a simulation process table from file
     sim.loadProcessTable("simfiles/process-table-01.sim");
     CHECK(sim.getSystemTime() == 0);
     CHECK(sim.isCpuIdle());
     CHECK(sim.getRunningProcessName() == "IDLE");
     CHECK(sim.getNumProcesses() == 5);
-    
+
     // check new arrivals and dispatch, so that first process A is
     // scheduled to run on the CPU
     sim.checkProcessArrivals();
     sim.dispatchCpuIfIdle();
-    
+
     CHECK_FALSE(sim.isCpuIdle());
     CHECK(sim.getRunningProcessName() == "A");
-    
+
     // process A has a service time of 3, so if we run 3 cycles, the
     // system should end up with A finished and the cpu idle again
-    for (int time = 0; time < 3; time++)
-    {
+    for (int time = 0; time < 3; time++) {
       sim.checkProcessArrivals();
       sim.dispatchCpuIfIdle();
       sim.simulateCpuCycle();
@@ -332,12 +323,12 @@ TEST_CASE("Task 4: Implement checkProcessFinished() member method, final test", 
     CHECK(sim.process[0].done);
   }
 
-  SECTION("Task 4: test that process B is finished correctly for table 01 FCFS", "[task4]")
-  {
+  SECTION("Task 4: test that process B is finished correctly for table 01 FCFS",
+          "[task4]") {
     // a basic scheduling system simulator that defaults to using FCFS
     // scheduling policy
     SchedulingSystem sim;
-    
+
     // load a simulation process table from file
     sim.loadProcessTable("simfiles/process-table-01.sim");
 
@@ -345,8 +336,7 @@ TEST_CASE("Task 4: Implement checkProcessFinished() member method, final test", 
     // simulate full cycles for 8 time cycles
     // we are calling check process done after each cpu cycle now, so also
     // testing it correctly does nothing when process is not done yet
-    for (int time = 0; time < 8; time++)
-    {
+    for (int time = 0; time < 8; time++) {
       sim.checkProcessArrivals();
       sim.dispatchCpuIfIdle();
       sim.simulateCpuCycle();
@@ -379,7 +369,7 @@ TEST_CASE("Task 4: Implement checkProcessFinished() member method, final test", 
     CHECK(sim.process[0].done);
     CHECK(sim.process[1].startTime == 3);
     CHECK(sim.process[1].endTime == 9);
-    CHECK(sim.process[1].done);    
+    CHECK(sim.process[1].done);
   }
 }
 #endif
@@ -391,59 +381,57 @@ TEST_CASE("Task 4: Implement checkProcessFinished() member method, final test", 
 #ifdef task5
 /**
  */
-TEST_CASE("Task 5: Test SchedulingSystem runSimulation()", "[task5]")
-{
-  SECTION("Task 5: Test SchedulingSystem runSimulation() FCFS on table 01", "[task5]")
-  {
+TEST_CASE("Task 5: Test SchedulingSystem runSimulation()", "[task5]") {
+  SECTION("Task 5: Test SchedulingSystem runSimulation() FCFS on table 01",
+          "[task5]") {
     // a basic scheduling system simulator that defaults to using FCFS
     // scheduling policy
     SchedulingSystem sim;
-    
+
     // load a simulation process table from file
     sim.loadProcessTable("simfiles/process-table-01.sim");
-    
+
     // run the simulation to completion with default FCFS
     // policy using the first process table simulation
     sim.runSimulation(false);
     CHECK(sim.isCpuIdle());
     CHECK(sim.allProcessesDone());
     CHECK(sim.getSystemTime() == 20);
-    CHECK(sim.finalSchedule() == "A  A  A  B  B  B  B  B  B  C  C  C  C  D  D  D  D  D  E  E  ");
+    CHECK(sim.finalSchedule() ==
+          "A  A  A  B  B  B  B  B  B  C  C  C  C  D  D  D  D  D  E  E  ");
     CHECK(sim.finalResultsTable() ==
-	  "Name Arrv T_s  Strt End  T_r  T_r / T_s\n"
-	  "A    0    3    0    3    3    1.0000  \n"
-	  "B    2    6    3    9    7    1.1667  \n"
-	  "C    4    4    9    13   9    2.2500  \n"
-	  "D    6    5    13   18   12   2.4000  \n"
-	  "E    8    2    18   20   12   6.0000  \n");
-    
+          "Name Arrv T_s  Strt End  T_r  T_r / T_s\n"
+          "A    0    3    0    3    3    1.0000  \n"
+          "B    2    6    3    9    7    1.1667  \n"
+          "C    4    4    9    13   9    2.2500  \n"
+          "D    6    5    13   18   12   2.4000  \n"
+          "E    8    2    18   20   12   6.0000  \n");
   }
 
-  SECTION("Task 5: Test SchedulingSystem runSimulation() FCFS on table 02", "[task5]")
-  {
+  SECTION("Task 5: Test SchedulingSystem runSimulation() FCFS on table 02",
+          "[task5]") {
     // a basic scheduling system simulator that defaults to using FCFS
     // scheduling policy
     SchedulingSystem sim;
-    
+
     // load a simulation process table from file
     sim.loadProcessTable("simfiles/process-table-02.sim");
-    
+
     // run the simulation to completion with default FCFS
     // policy using the first process table simulation
     sim.runSimulation(false);
     CHECK(sim.isCpuIdle());
     CHECK(sim.allProcessesDone());
     CHECK(sim.getSystemTime() == 20);
-    CHECK(sim.finalSchedule() == "A  A  A  B  B  B  B  B  C  C  D  D  D  D  D  E  E  E  E  E  ");
+    CHECK(sim.finalSchedule() ==
+          "A  A  A  B  B  B  B  B  C  C  D  D  D  D  D  E  E  E  E  E  ");
     CHECK(sim.finalResultsTable() ==
-	  "Name Arrv T_s  Strt End  T_r  T_r / T_s\n"
-	  "A    0    3    0    3    3    1.0000  \n"
-	  "B    1    5    3    8    7    1.4000  \n"
-	  "C    3    2    8    10   7    3.5000  \n"
-	  "D    9    5    10   15   6    1.2000  \n"
-	  "E    12   5    15   20   8    1.6000  \n"
-	  );
-    
+          "Name Arrv T_s  Strt End  T_r  T_r / T_s\n"
+          "A    0    3    0    3    3    1.0000  \n"
+          "B    1    5    3    8    7    1.4000  \n"
+          "C    3    2    8    10   7    3.5000  \n"
+          "D    9    5    10   15   6    1.2000  \n"
+          "E    12   5    15   20   8    1.6000  \n");
   }
 }
 #endif

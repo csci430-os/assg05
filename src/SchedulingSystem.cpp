@@ -40,8 +40,7 @@ using namespace std;
  * We default to a FCFS scheduling policy if none is specified when
  * the simulation starts.
  */
-SchedulingSystem::SchedulingSystem()
-{
+SchedulingSystem::SchedulingSystem() {
   // create a FCFS scheduling policy by default
   this->policy = new FCFSSchedulingPolicy();
 
@@ -68,8 +67,7 @@ SchedulingSystem::SchedulingSystem()
  * @param policy A pointer to the policy that should be
  *   used by this simulation.
  */
-SchedulingSystem::SchedulingSystem(SchedulingPolicy* policy)
-{
+SchedulingSystem::SchedulingSystem(SchedulingPolicy *policy) {
   // remember which policy we are tol to use for the simulations
   this->policy = policy;
 
@@ -90,17 +88,14 @@ SchedulingSystem::SchedulingSystem(SchedulingPolicy* policy)
  * Destroy the SchedulingSystem instance.  Free up any dynamically
  * allocated memory.
  */
-SchedulingSystem::~SchedulingSystem()
-{
+SchedulingSystem::~SchedulingSystem() {
   // delete scheduling policy if we have one
-  if (policy)
-  {
+  if (policy) {
     delete policy;
   }
 
   // delete process table
-  if (process)
-  {
+  if (process) {
     delete[] process;
   }
 }
@@ -111,16 +106,14 @@ SchedulingSystem::~SchedulingSystem()
  * Make sure the simulation is correctly initialized to start
  * a new simulation.
  */
-void SchedulingSystem::resetSystem()
-{
+void SchedulingSystem::resetSystem() {
   // set initial state of simulation variables
   systemTime = 0;
   cpu = IDLE;
   schedule = "";
 
   // clear out process table if it exists
-  if (process)
-  {
+  if (process) {
     delete[] process;
   }
   process = nullptr;
@@ -141,10 +134,7 @@ void SchedulingSystem::resetSystem()
  *   current running process, or the IDLE flag if the cpu
  *   is currently idle.
  */
-Pid SchedulingSystem::getRunningPid() const
-{
-  return cpu;
-}
+Pid SchedulingSystem::getRunningPid() const { return cpu; }
 
 /** @brief get process table
  *
@@ -154,10 +144,7 @@ Pid SchedulingSystem::getRunningPid() const
  *
  * @returns Process* returns an array of Process objects.
  */
-Process* SchedulingSystem::getProcessTable() const
-{
-  return process;
-}
+Process *SchedulingSystem::getProcessTable() const { return process; }
 
 /** @brief final results table
  *
@@ -168,8 +155,7 @@ Process* SchedulingSystem::getProcessTable() const
  * @returns string A string representation of the final
  *   results for the simulation formatted as a table.
  */
-string SchedulingSystem::finalResultsTable() const
-{
+string SchedulingSystem::finalResultsTable() const {
   stringstream out;
 
   // output a header first
@@ -182,15 +168,16 @@ string SchedulingSystem::finalResultsTable() const
       << " " << setw(8) << left << "T_r / T_s" << endl;
 
   // stream the results table to the string stream
-  for (Pid pid = 0; pid < numProcesses; pid++)
-  {
+  for (Pid pid = 0; pid < numProcesses; pid++) {
     Process p = process[pid];
     int turnaroundTime = p.endTime - p.arrivalTime;
     double trtsRatio = double(turnaroundTime) / double(p.serviceTime);
 
-    out << setw(4) << left << p.name << " " << setw(4) << left << p.arrivalTime << " " << setw(4) << left << p.serviceTime << " " << setw(4)
-        << left << p.startTime << " " << setw(4) << left << p.endTime << " " << setw(4) << left << turnaroundTime << " " << setw(8) << left
-        << setprecision(4) << fixed << trtsRatio << endl;
+    out << setw(4) << left << p.name << " " << setw(4) << left << p.arrivalTime
+        << " " << setw(4) << left << p.serviceTime << " " << setw(4) << left
+        << p.startTime << " " << setw(4) << left << p.endTime << " " << setw(4)
+        << left << turnaroundTime << " " << setw(8) << left << setprecision(4)
+        << fixed << trtsRatio << endl;
   }
 
   // return the results as a string
@@ -205,10 +192,7 @@ string SchedulingSystem::finalResultsTable() const
  * @returns string A string representation of the final
  *   schedule of process executions.
  */
-string SchedulingSystem::finalSchedule() const
-{
-  return schedule;
-}
+string SchedulingSystem::finalSchedule() const { return schedule; }
 
 /**
  * @brief load process table from file
@@ -230,13 +214,11 @@ string SchedulingSystem::finalSchedule() const
  * @param simfilename The name of the file to open and read the process
  *   information from.
  */
-void SchedulingSystem::loadProcessTable(string simfilename)
-{
+void SchedulingSystem::loadProcessTable(string simfilename) {
   ifstream processfile(simfilename);
 
   // if we can't open file, abort and let the user know problem
-  if (not processfile.is_open())
-  {
+  if (not processfile.is_open()) {
     stringstream msg;
     msg << "<SchedulingSystem::loadProcessTable> File not found, could not open"
         << " process table file: " << simfilename << endl;
@@ -246,11 +228,10 @@ void SchedulingSystem::loadProcessTable(string simfilename)
   // (re)set simulator variables so we start simulation from beginning
   // using new page stream and no old page references are in memory
   resetSystem();
-  
+
   // determine the total number of processes in the table
   processfile >> numProcesses;
-  if ((numProcesses < 0) or (numProcesses > MAX_PROCESSES))
-  {
+  if ((numProcesses < 0) or (numProcesses > MAX_PROCESSES)) {
     stringstream msg;
     msg << "<SchedulingSystem::loadPageStream> Invalid number of processes"
         << " in simulation: " << numProcesses << endl;
@@ -259,18 +240,17 @@ void SchedulingSystem::loadProcessTable(string simfilename)
 
   // dynamically allocate array to hold the process table,
   // freeing up old table if needed
-  if (process != NULL)
-  {
+  if (process != NULL) {
     delete[] process;
   }
   process = new Process[numProcesses];
 
   // load the simulated process table into our process array
   int pid = 0;
-  while ((not processfile.eof()) and (pid < numProcesses))
-  {
+  while ((not processfile.eof()) and (pid < numProcesses)) {
     // load the process information
-    processfile >> process[pid].name >> process[pid].arrivalTime >> process[pid].serviceTime;
+    processfile >> process[pid].name >> process[pid].arrivalTime >>
+        process[pid].serviceTime;
 
     // initialize other variables to initial states
     process[pid].pid = pid;
@@ -291,11 +271,11 @@ void SchedulingSystem::loadProcessTable(string simfilename)
   // final sanity check, if we didn't load in all processes or
   // if we didn't yet reach the end of the file as we were expecting
   // then throw an exception
-  if ((pid != numProcesses) or (not processfile.eof()))
-  {
+  if ((pid != numProcesses) or (not processfile.eof())) {
     stringstream msg;
     msg << "<SchedulingSystem::loadPageStream> Error, did not see expected"
-        << " number of processes in process table, expected: " << numProcesses << " received: " << pid << endl;
+        << " number of processes in process table, expected: " << numProcesses
+        << " received: " << pid << endl;
     throw SimulatorException(msg.str());
   }
 }
@@ -328,12 +308,13 @@ void SchedulingSystem::loadProcessTable(string simfilename)
  *   to generate a particular known random page table in order
  *   to have a repeatable simulation result.
  */
-void SchedulingSystem::generateRandomProcessTable(int numProcesses, double arrivalProbability, int maxServiceTime, int seed)
-{
+void SchedulingSystem::generateRandomProcessTable(int numProcesses,
+                                                  double arrivalProbability,
+                                                  int maxServiceTime,
+                                                  int seed) {
   // first set random seed, use provided seed value, or use current
   // system time to generate a new stream if given SEED_TIME as the seed.
-  if (seed == SEED_TIME)
-  {
+  if (seed == SEED_TIME) {
     seed = time(0);
   }
   srand(seed);
@@ -341,26 +322,24 @@ void SchedulingSystem::generateRandomProcessTable(int numProcesses, double arriv
   // (re)set simulator variables so we start simulation from beginning
   // using new page stream and no old page references are in memory
   resetSystem();
-  
+
   // allocate a new pageReference block of memory, freeing up any
   // previous created pageReference stream
-  if (process != NULL)
-  {
+  if (process != NULL) {
     delete[] process;
   }
   this->numProcesses = numProcesses;
   process = new Process[numProcesses];
 
-  // keep generating random processes until we have generated the asked for numProcesses
+  // keep generating random processes until we have generated the asked for
+  // numProcesses
   int pid = 0;
   int time = 0;
-  while (pid < numProcesses)
-  {
+  while (pid < numProcesses) {
     // check if a process arrives at the current time
     // r is a uniform random number from 0.0 to 1.0
     double r = ((double)rand() / (INT_MAX));
-    if (r < arrivalProbability)
-    {
+    if (r < arrivalProbability) {
       // the name of the process
       ostringstream nameStream;
       nameStream << "P" << pid;
@@ -402,15 +381,14 @@ void SchedulingSystem::generateRandomProcessTable(int numProcesses, double arriv
  * @returns string Returns a string representation of the processes
  *   in our process table that will be used in the simulation.
  */
-string SchedulingSystem::processTableToString() const
-{
+string SchedulingSystem::processTableToString() const {
   stringstream out;
 
   // iterate over process table and build output string stream
   out << "[ ";
-  for (Pid pid = 0; pid < numProcesses; pid++)
-  {
-    out << "(" << process[pid].name << " " << process[pid].arrivalTime << " " << process[pid].serviceTime << ") ";
+  for (Pid pid = 0; pid < numProcesses; pid++) {
+    out << "(" << process[pid].name << " " << process[pid].arrivalTime << " "
+        << process[pid].serviceTime << ") ";
   }
   out << "]";
 
@@ -426,15 +404,12 @@ string SchedulingSystem::processTableToString() const
  * of arrivals, so they can add them to their list of ready
  * and waiting processes, waiting to be scheduled on the cpu.
  */
-void SchedulingSystem::checkProcessArrivals()
-{
+void SchedulingSystem::checkProcessArrivals() {
   // search process table to see if any process has an
   // arrival time of right now.  If so, notify the policy
   // of the newly arrived process.
-  for (Pid pid = 0; pid < numProcesses; pid++)
-  {
-    if (process[pid].arrivalTime == systemTime)
-    {
+  for (Pid pid = 0; pid < numProcesses; pid++) {
+    if (process[pid].arrivalTime == systemTime) {
       policy->newProcess(pid);
     }
   }
@@ -450,14 +425,11 @@ void SchedulingSystem::checkProcessArrivals()
  * @returns bool True if a process did arrive at the current system
  *   time, false if not.
  */
-bool SchedulingSystem::didProcessArrive() const
-{
+bool SchedulingSystem::didProcessArrive() const {
   // search process table to see if a process is arriving at
   // the current time
-  for (Pid pid = 0; pid < numProcesses; pid++)
-  {
-    if (process[pid].arrivalTime == systemTime)
-    {
+  for (Pid pid = 0; pid < numProcesses; pid++) {
+    if (process[pid].arrivalTime == systemTime) {
       return true;
     }
   }
@@ -473,20 +445,17 @@ bool SchedulingSystem::didProcessArrive() const
  * time, and statistics for the current running process, if
  * there is one.
  */
-void SchedulingSystem::simulateCpuCycle()
-{
+void SchedulingSystem::simulateCpuCycle() {
   // increment system time
   systemTime++;
 
   // if a process is running, increment its statistics and record
   // the history of its execution
-  if (cpu != IDLE)
-  {
+  if (cpu != IDLE) {
     process[cpu].usedTime++;
     process[cpu].remainingTime--;
     schedule += (process[cpu].name + "  ");
-  }
-  else // record cpu idle during this time period
+  } else // record cpu idle during this time period
   {
     schedule += "I  ";
   }
@@ -506,18 +475,15 @@ void SchedulingSystem::simulateCpuCycle()
  * should make a note when a new process arrives, and do a preemption
  * at that point.
  */
-void SchedulingSystem::checkProcessPreemption()
-{
+void SchedulingSystem::checkProcessPreemption() {
   // if cpu is idle, nothing to check
-  if (cpu == IDLE)
-  {
+  if (cpu == IDLE) {
     return;
   }
 
   // if the policy says we need to preempt, then remove the
   // process from the cpu and make the cpu idle.
-  if (policy->preempt())
-  {
+  if (policy->preempt()) {
     cpu = IDLE;
   }
 }
@@ -531,20 +497,19 @@ void SchedulingSystem::checkProcessPreemption()
  * calculations.  These in particular are useful for HRRN
  * scheduling policies to have.
  */
-void SchedulingSystem::updateProcessStatistics()
-{
+void SchedulingSystem::updateProcessStatistics() {
   // search all processes in the process table
-  for (Pid pid = 0; pid < numProcesses; pid++)
-  {
+  for (Pid pid = 0; pid < numProcesses; pid++) {
     // if the process has started but is not yet done, update
     // its information
-    if ((systemTime >= process[pid].arrivalTime) and (not process[pid].done))
-    {
+    if ((systemTime >= process[pid].arrivalTime) and (not process[pid].done)) {
       // update the wait time for this process
       process[pid].waitTime = systemTime - process[pid].arrivalTime;
 
       // update this processes response ratio
-      process[pid].responseRatio = float(process[pid].serviceTime + process[pid].waitTime) / float(process[pid].serviceTime);
+      process[pid].responseRatio =
+          float(process[pid].serviceTime + process[pid].waitTime) /
+          float(process[pid].serviceTime);
     }
   }
 }
@@ -567,12 +532,10 @@ void SchedulingSystem::updateProcessStatistics()
  * @throws Throws an exception if no process table has been (pre)loaded
  *   and is ready for the simulation to use.
  */
-void SchedulingSystem::runSimulation(bool verbose)
-{
+void SchedulingSystem::runSimulation(bool verbose) {
   // check that a process table is loaded and ready to
   // simulate first before beginning
-  if ((numProcesses <= 0) or (process == NULL))
-  {
+  if ((numProcesses <= 0) or (process == NULL)) {
     stringstream msg;
     msg << "<SchedulingSystem::runSimulation> Error, you must load or"
         << " generate a process table first before running"
@@ -588,7 +551,7 @@ void SchedulingSystem::runSimulation(bool verbose)
   while (not allProcessesDone())
   {
     //cout << "runSimulation()> systemTime: " << systemTime << endl;
-    
+
     // check for new arrivals at this time step so can notify
     // our scheduling policy to add new processs they are managing
     checkProcessArrivals();
@@ -611,13 +574,11 @@ void SchedulingSystem::runSimulation(bool verbose)
     updateProcessStatistics();
   }
   */
-  
+
   // Display scheduling simulation results if asked too
-  if (verbose)
-  {
+  if (verbose) {
     // display a header of systemTime and the final schedule
-    for (int time = 0; time <= systemTime; time++)
-    {
+    for (int time = 0; time <= systemTime; time++) {
       cout << setw(2) << left << time << " ";
     }
     cout << endl;

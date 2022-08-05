@@ -22,9 +22,9 @@
  * @brief constructor
  *
  * The basic constructor is called by the PagingSystem when setting up/creating
- * the paging scheme to use for a simulation.  We keep track of the paging system
- * instance we are associated with, so we can call the paging system to get
- * needed information to make replacment decisions.
+ * the paging scheme to use for a simulation.  We keep track of the paging
+ * system instance we are associated with, so we can call the paging system to
+ * get needed information to make replacment decisions.
  */
 SchedulingPolicy::SchedulingPolicy() {}
 
@@ -48,7 +48,6 @@ SchedulingPolicy::~SchedulingPolicy() {}
  * @param sys A pointer to the SchedulingSystem simulator that
  *   this policy will be working with.
  */
-void SchedulingPolicy::setSchedulingSystem(SchedulingSystem* sys)
-{
+void SchedulingPolicy::setSchedulingSystem(SchedulingSystem *sys) {
   this->sys = sys;
 }

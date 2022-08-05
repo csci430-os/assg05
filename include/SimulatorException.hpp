@@ -24,12 +24,11 @@ using namespace std;
  * encounters a problem.
  *
  */
-class SimulatorException : public exception
-{
+class SimulatorException : public exception {
 public:
-  explicit SimulatorException(const string& msg);
+  explicit SimulatorException(const string &msg);
   ~SimulatorException();
-  virtual const char* what() const throw();
+  virtual const char *what() const throw();
 
 private:
   /// Stores the particular message describing what caused the exception.
