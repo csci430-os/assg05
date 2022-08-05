@@ -36,7 +36,8 @@ typedef int Pid;
  * a derived class of this API, and will expect it to implement the
  * interface defined by this abstract base class.
  */
-class FCFSSchedulingPolicy : public SchedulingPolicy {
+class FCFSSchedulingPolicy : public SchedulingPolicy
+{
 private:
   /// @brief The ready queue for the FCFS policy, keeps track of
   ///   which process arrived first for dispatching.

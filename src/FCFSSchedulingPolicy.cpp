@@ -29,7 +29,9 @@ using namespace std;
  * system instance we are associated with, so we can call the paging system to
  * get needed information to make replacment decisions.
  */
-FCFSSchedulingPolicy::FCFSSchedulingPolicy() : SchedulingPolicy() {
+FCFSSchedulingPolicy::FCFSSchedulingPolicy()
+  : SchedulingPolicy()
+{
   sys = NULL;
   resetPolicy();
 }
@@ -50,7 +52,8 @@ FCFSSchedulingPolicy::~FCFSSchedulingPolicy() {}
  * @param pid The process identifier (pid) of the newly arriving
  *   process that should now be managed by this policy.
  */
-void FCFSSchedulingPolicy::newProcess(Pid pid) {
+void FCFSSchedulingPolicy::newProcess(Pid pid)
+{
   // put the new process on the end of the ready queue
   readyQueue.push(pid);
 }
@@ -66,14 +69,17 @@ void FCFSSchedulingPolicy::newProcess(Pid pid) {
  * @returns pid Returns the process identifier of the process
  *   we select to run next.
  */
-Pid FCFSSchedulingPolicy::dispatch() {
+Pid FCFSSchedulingPolicy::dispatch()
+{
   // make sure the ready queue is not empty, if it is we
   // can't dispatch at this time
-  if (readyQueue.empty()) {
+  if (readyQueue.empty())
+  {
     return IDLE;
   }
   // otherwise pop the front item and return it
-  else {
+  else
+  {
     int pid = readyQueue.front();
     readyQueue.pop();
     return pid;
@@ -91,7 +97,10 @@ Pid FCFSSchedulingPolicy::dispatch() {
  * @returns bool Always returns false to indicate FCFS never
  *   preempts.
  */
-bool FCFSSchedulingPolicy::preempt() { return false; }
+bool FCFSSchedulingPolicy::preempt()
+{
+  return false;
+}
 
 /** reset policy
  * Reset or initialize the scheduling policty to an initial state,
@@ -99,7 +108,8 @@ bool FCFSSchedulingPolicy::preempt() { return false; }
  * we want to clear out the ready queue and make sure it is
  * empty to begin with.
  */
-void FCFSSchedulingPolicy::resetPolicy() {
+void FCFSSchedulingPolicy::resetPolicy()
+{
   // make sure the queue is empty, swap a queue with a known
   // empty queue will free up the old queue and ensure we start
   // with an empty one.

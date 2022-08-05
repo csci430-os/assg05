@@ -48,6 +48,7 @@ SchedulingPolicy::~SchedulingPolicy() {}
  * @param sys A pointer to the SchedulingSystem simulator that
  *   this policy will be working with.
  */
-void SchedulingPolicy::setSchedulingSystem(SchedulingSystem *sys) {
+void SchedulingPolicy::setSchedulingSystem(SchedulingSystem* sys)
+{
   this->sys = sys;
 }

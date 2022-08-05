@@ -3,7 +3,7 @@
  *
  * @author Student Name
  * @note   cwid: 123456
- * @date   Fall 2019
+ * @date   Summer 2022
  * @note   ide:  g++ 8.2.0 / GNU Make 4.2.1
  *
  * Header include file for our SchedulingSystem class.  The
@@ -59,7 +59,8 @@ const int SEED_TIME = 0;
  * simulator.  This is basically structure of information
  * about the processes being managed by the system.
  */
-struct Process {
+struct Process
+{
   /// @brief The assigned process identifier for this process
   Pid pid;
 
@@ -118,7 +119,8 @@ struct Process {
  * object that is responsible for making the actual
  * dispatching/scheduling decisions when needed.
  */
-class SchedulingSystem {
+class SchedulingSystem
+{
 private:
   /// @brief The total number of processes that will be in the simulation.
   int numProcesses;
@@ -126,13 +128,13 @@ private:
   /// @brief The process table.  Holds the table of information about
   ///   all of the proceesses that will be used in the simulation.
   ///   Each process has a name, an arrival time, and a service time
-  Process *process;
+  Process* process;
 
   /// @brief SchedulingPolicy an instance of a SchedulingPolicy class that
   ///   conforms to the SchedulingPolicy API.  This instance is called
   ///   whenever we need to make process scheduling decisions for the
   ///   simulation.
-  SchedulingPolicy *policy;
+  SchedulingPolicy* policy;
 
   /// @brief The current simulation system time.
   int systemTime;
@@ -152,21 +154,20 @@ private:
 public:
   // constructors and destructors
   SchedulingSystem();
-  SchedulingSystem(SchedulingPolicy *policy);
+  SchedulingSystem(SchedulingPolicy* policy);
   ~SchedulingSystem();
   void resetSystem();
 
   // accessor methods and system information
   Pid getRunningPid() const;
-  Process *getProcessTable() const;
+  Process* getProcessTable() const;
   string finalResultsTable() const;
   string finalSchedule() const;
 
   // methods for loading or generating page reference streams
   // for the simulation
   void loadProcessTable(string simfilename);
-  void generateRandomProcessTable(int numProcesses, double arrivalProbability,
-                                  int maxServiceTime = 6, int seed = SEED_TIME);
+  void generateRandomProcessTable(int numProcesses, double arrivalProbability, int maxServiceTime = 6, int seed = SEED_TIME);
   string processTableToString() const;
 
   // methods for running paging system simulation

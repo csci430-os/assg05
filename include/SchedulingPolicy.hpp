@@ -40,18 +40,19 @@ typedef int Pid;
  * a derived class of this API, and will expect it to implement the
  * interface defined by this abstract base class.
  */
-class SchedulingPolicy {
+class SchedulingPolicy
+{
 protected: // derived classes need to be able to access the sys member instance
   /// @brief The paging system that this paging scheme is
   ///   supporting
-  SchedulingSystem *sys;
+  SchedulingSystem* sys;
 
 public:
   SchedulingPolicy();
 
   // virtual function, concrete subclasses can override if needed
   virtual ~SchedulingPolicy();
-  virtual void setSchedulingSystem(SchedulingSystem *sys);
+  virtual void setSchedulingSystem(SchedulingSystem* sys);
 
   // pure virtual functions, concrete subclasses must implement
   virtual void newProcess(Pid pid) = 0;

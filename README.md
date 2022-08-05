@@ -353,11 +353,11 @@ and are passing the task 5 unit tests.
 
 # Assignment Tasks (Implement Page Replacement Scheme of your choice)
 
-Once these 4 tasks are complete, all of the unit tests you were given
+Once these 5 tasks are complete, all of the unit tests you were given
 should now be passing.  The `runSimulation()` function has been implemented
 for you, and it will call the `dispatchCpuIfIdle()` and `checkProcessFinished()`
 functions you implemented (as well as need to use the getter methods from
-step 1).
+step 1). 
 
 The next step is a bit more open ended.  The simulation and unit tests
 you were given will use the `FCFSSchedulingPolicy` object by default to
@@ -381,19 +381,136 @@ to keep track of the running processes being assigned and using its time
 slice quantum, and to preempt the process when it time slice quantum
 has been used up, returning it to your ready queue.
 
-Perform the following tasks:
 
-## Task 5: 
+You should make multiple commits while implementing your choosen scheduling
+policy.  You need to do at least the following steps
 
-## Task 6: 
+## Copy FCFSSchedulingPolicy header and implementation files
 
-## Task 7: 
+Copy over the `FCFSSchedulingPolicy` header file and implementation file
+into new files, and rename the file based on the scheduling policy
+you have choosen to implement.  For example, if you are going to implement
+Highest Response Ratio Next (HRRN), you should end up with a file named
+`HRRNSchedulingPolicy.hpp` in the `include` directory, and
+`HRRNSchedulingPolicy.cpp` in the `src` directory.  Use abreviations
+SPN, SRT, RR, HRRN, FB for shortest process next, shortest remaining time,
+round robin, highest response ratio and feedback schedulers respectively.
 
-## Task 8: 
+After copying the FCFS files to the new policy you are creating, do
+a global search and replace to change the name of the class.  For
+example, if you are using HRRN, you should search for 
+`FCFSSchedulingPolicy` in your copied files and replace it with
+`HRRNSchedulingPolicy`.  Also in the header file there is an 
+`#ifdef` to guard from multiple inclusions of the class that looks like this:
 
-Once you get this output correct, your system tests should then pass
-successfully as well when you run them.
+```
+#ifndef FCFSSCHEDULING_POLICY_HPP
+#define FCFSSCHEDULING_POLICY_HPP
+```
 
+You should modify this to be `HRRNSCHEDULING_POLICY_HPP` in all caps.
+
+Next you need to add this new file to the build system.  There are
+lines commented out in the `Makefile` for each of the scheduling
+policies for the `assg_src` makefile variable.  Add your source file
+to this list of files that is compiled.  Be careful, all lines but the
+last line must have the `\` to continue the line, so if you are
+uncommenting to add a new line, you need to also put the `\` on the
+previous line.
+
+Once you have done this, your file should compile and be linked into the
+test and sim executables when the compiler and linker run.  Your file is
+still implementing FCFS policy at this point, but it is an important
+milestone that you can build with your new policy class files and run
+the unit and system tests.  You should make a commit for task 6 here once
+you get to this point and can build code again with your new policy
+as part of the build system.
+
+## Implement the SchedulingPolicy API Methods
+
+You should next attempt to implement the API methods for your
+new scheduling policy one by one.  You will also probably need
+to define some member variable data structures, like queues or lists,
+to hold information that your policy needs to make the dispatching
+scheduling decision.  
+
+You should probably implement the methods in this order, and it would
+be best to make a commit of each one when you think it is (mostly)
+working:
+
+- `resetPolicy()`
+- `preempt()`
+- `newProcess()`
+- `dispatch()`
+
+If you copied over the FCFS implementation to start work on your new policy as
+suggested, you will have the implementations of the FCFS scheduling policy to begin with.
+You will need to remove these and implement each method for your new
+policy.  Make sure that you also read the function documentation and modify it
+when doing this step, to make sure that it correctly reflects the implementation
+of your choosen policy.
+
+Briefly here are what each of these methods is supposed to do:
+
+**`resetPolicy()`** is called when a new simulation is created/reset.  You should
+initialize any member variables used by your policy implementation here.  For example
+FCFS uses a simple queue of processes to keep track of which current ready process
+arrived first.  So `resetPolicy()` simply ensures that this queue is
+empty in its implementation.
+
+**`preempt()`** is called by the `SchedulingSystem` for each simulated time
+cycle.  It is the job of the scheduling policy to tell the scheduling system if
+it is time to preempt the current running process.  FCFS is a nonpreemptive
+policy, so you will see it always returns false.  But for a preemptive policy,
+for example a RR round robin scheduler, processes can be preempted when running.
+So if your choosen policy is preemptive, you need to decide if it is time to preempt
+the current running process, and if so you should return `true` instead of `false`
+when asked if preemption should occur or not.
+
+**`newProcess()`** is called anytime a new processes enteres the scheduling simulation.
+Most scheduling policies need to know when a new process arrives, in order to keep
+track of it, note that it is currently ready and waiting, and do other things.
+For example, for FCFS, we keep track of new arriving processes by simply adding them
+onto the back of the ready queue of processes that this policy maintains.
+
+**`dispatch()`** finall is called to make the actual dispatching decision, e.g.
+to decide which process to run next. `dispatch()` will be called by the
+scheduling simulator anytime the cpu is `IDLE` at the beginning of a simulation
+cycle.  Your scheduling policy needs to determine which of the currently
+available and waiting processes should be scheduled next to run.  This method returns the
+`Pid` process identifier of the process to be scheduled to run.  For FCFS the
+dispatching decision is simple, whichever process that is ready and is at the front
+of the `readyQueue` (because it has been waiting the longest) should be selected
+to be scheduled next.
+
+Again you should probably make individual commits for the implementation of each of these
+methods. 
+
+You might find it useful to add additional unit tests while working on these implementations.
+You can add in unit tests to the `assg05-tests.cpp` file for this assignment to test
+the implementation of your functions if you wish (normally you are not allowed to
+add or modify tests in this file).  If so, create a `task6` test declaration, and
+create `SchedulingSystem` instances that use your new scheduling policy as the
+scheme for the simulation.
+
+## Enable and Test Full Scheduling System Simulations
+
+Finally make sure that you enable full scheduling system simulations using
+your new scheduling policy.  You will need to add code into the
+`assg05-sim.cpp` file to allow for your new scheduling policy to be
+selected from the command line.  Read the code and add/uncomment the
+necessary lines for the scheduling policy you are implementing.
+
+You should test your code with the given system tests at a minimum.  There are defined
+system tests for the schedulers already in the `simfiles` directory.
+
+You can and should remove the system tests from the `scripts/run-system-tests` for 
+scheduling policies that you do not implement.  Just leave in the system tests of the
+given FCFS scheduler, and the scheduling policy you implement.  If you get your
+system tests to pass, and remove tests of other policies that you don't implement, 
+you should be able to get the final 20 points awarded to you in GitHub when you
+push a commit that is passing all of the system tests for FCFS and your scheduling
+policy.
 
 # System Tests: Putting it all Together
 

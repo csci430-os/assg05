@@ -27,31 +27,27 @@ using namespace std;
  * arguments.  Print usage information and exit with non success
  * status to indicate error.
  */
-void usage() {
-  cout
-      << "Usage: sim policy process-table.sim [quantum]" << endl
-      << "  Run scheduling system simulation.  The scheduling" << endl
-      << "  simulator reads in a table of process information, specifying"
-      << endl
-      << "  arrival times and service times of processes to simulate." << endl
-      << "  This program simulates the indicated process scheduling" << endl
-      << "  policy.  Simulation is run until all processes are finished."
-      << endl
-      << "  Final data are displayed about the scheduling history" << endl
-      << "  of which process ran at each time step, and the statistics " << endl
-      << "  of the performance of the scheduling policy." << endl
-      << endl
-      << "Options:" << endl
-      << "  policy       The page job scheduling policy to use, current" << endl
-      << "               'FCFS', `HRRN', 'RR', 'SPN', 'SRT' are valid" << endl
-      << "               and supported" << endl
-      << "  process-table.sim|RND  Filename of process table information to"
-      << endl
-      << "               to be used for the simulation.  RND indicates generate"
-      << endl
-      << "               a random process table." << endl
-      << "  [quantum]    Time slice quantum, only used by some policies" << endl
-      << "               that perform round-robin time slicing" << endl;
+void usage()
+{
+  cout << "Usage: sim policy process-table.sim [quantum]" << endl
+       << "  Run scheduling system simulation.  The scheduling" << endl
+       << "  simulator reads in a table of process information, specifying" << endl
+       << "  arrival times and service times of processes to simulate." << endl
+       << "  This program simulates the indicated process scheduling" << endl
+       << "  policy.  Simulation is run until all processes are finished." << endl
+       << "  Final data are displayed about the scheduling history" << endl
+       << "  of which process ran at each time step, and the statistics " << endl
+       << "  of the performance of the scheduling policy." << endl
+       << endl
+       << "Options:" << endl
+       << "  policy       The page job scheduling policy to use, current" << endl
+       << "               'FCFS', `HRRN', 'RR', 'SPN', 'SRT' are valid" << endl
+       << "               and supported" << endl
+       << "  process-table.sim|RND  Filename of process table information to" << endl
+       << "               to be used for the simulation.  RND indicates generate" << endl
+       << "               a random process table." << endl
+       << "  [quantum]    Time slice quantum, only used by some policies" << endl
+       << "               that perform round-robin time slicing" << endl;
   exit(1);
 }
 
@@ -74,11 +70,13 @@ void usage() {
  *   or exceptions.  A non-zero value is returned when an exception occurs
  *   or whenever simulation terminates abnormally.
  */
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
   // parse command line arguments
   // if we do not get required command line arguments, print usage
   // and exit immediately.
-  if ((argc != 3) and (argc != 4)) {
+  if ((argc != 3) and (argc != 4))
+  {
     usage();
   }
 
@@ -87,7 +85,8 @@ int main(int argc, char **argv) {
   bool verbose = true;
   int quantum = 1;
   // if optional 4th argument, parse the time slice quantum
-  if (argc == 4) {
+  if (argc == 4)
+  {
     quantum = atoi(argv[3]);
     // need to use quantum to make compiler happy, can remove if/when really
     // using below
@@ -95,9 +94,10 @@ int main(int argc, char **argv) {
   }
 
   // instantiate a policy instance to use
-  SchedulingPolicy *policy;
+  SchedulingPolicy* policy;
 
-  if (policyName == "FCFS") {
+  if (policyName == "FCFS")
+  {
     policy = new FCFSSchedulingPolicy();
   }
   /*  example of adding additional policies to the simulation
@@ -126,19 +126,25 @@ int main(int argc, char **argv) {
   }
 
   // create Scheduling System simulation
-  SchedulingSystem *sim = new SchedulingSystem(policy);
+  SchedulingSystem* sim = new SchedulingSystem(policy);
 
   // try and run the simulation, use verbose output so we can see whole system
   // simulation on standard output
-  try {
+  try
+  {
     // if indicated, generate a set of random processes instead
-    if (processTableFileName == "RND") {
+    if (processTableFileName == "RND")
+    {
       sim->generateRandomProcessTable(1000, 0.20, 10, SEED_TIME);
-    } else {
+    }
+    else
+    {
       sim->loadProcessTable(processTableFileName);
     }
     sim->runSimulation(verbose);
-  } catch (const SimulatorException &e) {
+  }
+  catch (const SimulatorException& e)
+  {
     cerr << "Simulation run resulted in runtime error occurring: " << endl;
     cerr << e.what() << endl;
     exit(1);

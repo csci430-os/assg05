@@ -21,7 +21,10 @@ using namespace std;
  *
  * @param msg The exception message thrown when an error occurs.
  */
-SimulatorException::SimulatorException(const string &msg) { message = msg; }
+SimulatorException::SimulatorException(const string& msg)
+{
+  message = msg;
+}
 
 /**
  * @brief SimulatorException destructor
@@ -39,4 +42,7 @@ SimulatorException::~SimulatorException() {}
  * @returns char* Returns a const old style c character array message for
  *   display/use by the process that catches this exception.
  */
-const char *SimulatorException::what() const throw() { return message.c_str(); }
+const char* SimulatorException::what() const throw()
+{
+  return message.c_str();
+}
